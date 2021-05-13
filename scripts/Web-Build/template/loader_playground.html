@@ -1,0 +1,68 @@
+<!DOCTYPE html>  
+<html>
+<head>
+	<title>Loader Playground</title>
+	<style>
+		* { 
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		body {
+			background-color: black;
+			min-height: 100vh;
+			min-width: 100vw;
+			text-align: center;
+			justify-content: center;
+		}
+		#progress_frame {
+			background-color: white;
+			border-radius: 5px;
+			max-width: 300px;
+			max-height: 300px;
+			display: inline-block;
+			margin:auto;
+		}
+		
+		#logo {
+			max-width: 250px;
+			height: auto
+		}
+		
+		#progress {
+		
+		}
+		
+		.outer {
+			display: table;
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+		}
+		.middle {
+			display: table-cell;
+			vertical-align: middle;
+		}
+		.inner {
+			margin-left: auto;
+			margin-right: auto;
+		}
+	</style>
+</head>
+<body>
+	<div class="outer">
+		<div class="middle">
+			<div class="inner" id="progress_frame">
+				<div>
+					<img src="hazel_logo.png"  id="logo"/>
+				</div>
+				<div id="progress_bar">
+					<progress value="50" max="100" id="progress"></progress>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
