@@ -18,12 +18,16 @@ namespace Hazel {
 		HZ_PROFILE_FUNCTION();
 
 		HZ_CORE_ASSERT(!s_Instance, "Application already exists!");
+		HZ_CORE_INFO("Creating the window!");
 		s_Instance = this;
 		m_Window = Window::Create(WindowProps(name));
+		HZ_CORE_INFO("Binding event!");
 		m_Window->SetEventCallback(HZ_BIND_EVENT_FN(Application::OnEvent));
 
+		HZ_CORE_INFO("Initializing renderer");
 		Renderer::Init();
 
+		HZ_CORE_INFO("Creating IMGUI layer");
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 	}
@@ -75,8 +79,15 @@ namespace Hazel {
 	void Application::Run()
 	{
 		HZ_PROFILE_FUNCTION();
-
+		#ifdef HZ_PLATFORM_WEB
+		// fix v-sync issues on web
+		if (!m_Window->IsVSync()) {
+			m_Window->SetVSync(true);
+		}
+		if(m_Running)
+		#else
 		while (m_Running)
+		#endif
 		{
 			HZ_PROFILE_SCOPE("RunLoop");
 

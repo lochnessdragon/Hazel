@@ -1,7 +1,11 @@
 #include "hzpch.h"
 #include "Platform/OpenGL/OpenGLFramebuffer.h"
 
+#ifndef HZ_PLATFORM_WEB
 #include <glad/glad.h>
+#else 
+#include <GLES3/gl31.h>
+#endif
 
 namespace Hazel {
 
@@ -16,7 +20,12 @@ namespace Hazel {
 
 		static void CreateTextures(bool multisampled, uint32_t* outID, uint32_t count)
 		{
+#ifndef HZ_PLATFORM_WEB
 			glCreateTextures(TextureTarget(multisampled), count, outID);
+#else
+			glGenTextures(count, outID);
+			glBindTexture(TextureTarget(multisampled), *outID);
+#endif
 		}
 
 		static void BindTexture(bool multisampled, uint32_t id)
@@ -29,7 +38,11 @@ namespace Hazel {
 			bool multisampled = samples > 1;
 			if (multisampled)
 			{
+#ifndef HZ_PLATFORM_WEB
 				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
+#else 
+				glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
+#endif
 			}
 			else
 			{
@@ -50,7 +63,11 @@ namespace Hazel {
 			bool multisampled = samples > 1;
 			if (multisampled)
 			{
+#ifndef HZ_PLATFORM_WEB
 				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
+#else
+				glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
+#endif
 			}
 			else
 			{
@@ -123,7 +140,11 @@ namespace Hazel {
 			m_DepthAttachment = 0;
 		}
 
+#ifndef HZ_PLATFORM_WEB
 		glCreateFramebuffers(1, &m_RendererID);
+#else
+		glGenFramebuffers(1, &m_RendererID);
+#endif
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 
 		bool multisample = m_Specification.Samples > 1;
@@ -170,7 +191,12 @@ namespace Hazel {
 		else if (m_ColorAttachments.empty())
 		{
 			// Only depth-pass
+#ifndef HZ_PLATFORM_WEB
 			glDrawBuffer(GL_NONE);
+#else 
+			GLenum buffers[1] = { GL_NONE };
+			glDrawBuffers(1, buffers);
+#endif
 		}
 
 		HZ_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
@@ -218,8 +244,14 @@ namespace Hazel {
 		HZ_CORE_ASSERT(attachmentIndex < m_ColorAttachments.size());
 
 		auto& spec = m_ColorAttachmentSpecifications[attachmentIndex];
+
+#ifndef HZ_PLATFORM_WEB
 		glClearTexImage(m_ColorAttachments[attachmentIndex], 0,
 			Utils::HazelFBTextureFormatToGL(spec.TextureFormat), GL_INT, &value);
+#else 
+		// todo: implement a function
+		HZ_CORE_ERROR("NO function definition for OpenGLFramebuffer::ClearAttachment on web platforms");
+#endif
 	}
 
 }

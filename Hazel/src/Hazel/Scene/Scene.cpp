@@ -131,7 +131,9 @@ namespace Hazel {
 	template<typename T>
 	void Scene::OnComponentAdded(Entity entity, T& component)
 	{
+		#ifndef HZ_PLATFORM_WEB
 		static_assert(false);
+		#endif
 	}
 
 	template<>

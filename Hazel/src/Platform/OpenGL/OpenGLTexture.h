@@ -2,7 +2,11 @@
 
 #include "Hazel/Renderer/Texture.h"
 
+#ifndef HZ_PLATFORM_WEB
 #include <glad/glad.h>
+#else 
+#include <GLES3/gl3.h>
+#endif
 
 namespace Hazel {
 

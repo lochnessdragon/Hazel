@@ -13,10 +13,14 @@ namespace Hazel {
 	{
 		std::vector<spdlog::sink_ptr> logSinks;
 		logSinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+#ifndef HZ_PLATFORM_WEB
 		logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("Hazel.log", true));
+#endif
 
 		logSinks[0]->set_pattern("%^[%T] %n: %v%$");
+#ifndef HZ_PLATFORM_WEB
 		logSinks[1]->set_pattern("[%T] [%l] %n: %v");
+#endif
 
 		s_CoreLogger = std::make_shared<spdlog::logger>("HAZEL", begin(logSinks), end(logSinks));
 		spdlog::register_logger(s_CoreLogger);

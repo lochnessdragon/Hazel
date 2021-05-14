@@ -12,6 +12,7 @@
 #include "Hazel/ImGui/ImGuiLayer.h"
 
 int main(int argc, char** argv);
+void run();
 
 namespace Hazel {
 
@@ -47,6 +48,7 @@ namespace Hazel {
 	private:
 		static Application* s_Instance;
 		friend int ::main(int argc, char** argv);
+		friend void ::run();
 	};
 
 	// To be defined in CLIENT

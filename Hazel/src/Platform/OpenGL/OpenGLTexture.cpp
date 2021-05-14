@@ -13,7 +13,14 @@ namespace Hazel {
 		m_InternalFormat = GL_RGBA8;
 		m_DataFormat = GL_RGBA;
 
+#ifndef HZ_PLATFORM_WEB
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+#else
+		glGenTextures(1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+#endif
+
+#ifndef HZ_PLATFORM_WEB
 		glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -21,6 +28,16 @@ namespace Hazel {
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+#else 
+		glTexStorage2D(GL_TEXTURE_2D, 1, m_InternalFormat, m_Width, m_Height);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glBindTexture(GL_TEXTURE_2D, 0);
+#endif
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
@@ -56,7 +73,9 @@ namespace Hazel {
 
 		HZ_CORE_ASSERT(internalFormat & dataFormat, "Format not supported!");
 
+#ifndef HZ_PLATFORM_WEB
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+
 		glTextureStorage2D(m_RendererID, 1, internalFormat, m_Width, m_Height);
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -66,6 +85,21 @@ namespace Hazel {
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, dataFormat, GL_UNSIGNED_BYTE, data);
+#else
+		glGenTextures(1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+
+		glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, m_Width, m_Height);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, dataFormat, GL_UNSIGNED_BYTE, data);
+		glBindTexture(GL_TEXTURE_2D, 0);
+#endif
 
 		stbi_image_free(data);
 	}
@@ -83,13 +117,24 @@ namespace Hazel {
 
 		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
 		HZ_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
+#ifndef HZ_PLATFORM_WEB
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+#else 
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+		glBindTexture(GL_TEXTURE_2D, 0);
+#endif
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
 		HZ_PROFILE_FUNCTION();
-
+#ifndef HZ_PLATFORM_WEB
 		glBindTextureUnit(slot, m_RendererID);
+#else
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+#endif
+
 	}
 }

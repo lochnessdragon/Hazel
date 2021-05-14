@@ -26,7 +26,11 @@ namespace Hazel {
 		static const uint32_t MaxQuads = 20000;
 		static const uint32_t MaxVertices = MaxQuads * 4;
 		static const uint32_t MaxIndices = MaxQuads * 6;
+#ifndef HZ_PLATFORM_WEB
 		static const uint32_t MaxTextureSlots = 32; // TODO: RenderCaps
+#else
+		static const uint32_t MaxTextureSlots = 16; // WebGL can only do 16 texture slots. rip :(
+#endif
 
 		Ref<VertexArray> QuadVertexArray;
 		Ref<VertexBuffer> QuadVertexBuffer;

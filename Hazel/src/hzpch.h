@@ -22,6 +22,11 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#ifdef HZ_PLATFORM_WEB
+#include <emscripten/emscripten.h>
+#define GLFW_INCLUDE_ES3
+#endif
+
 #include "Hazel/Core/Base.h"
 
 #include "Hazel/Core/Log.h"

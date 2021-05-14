@@ -1,7 +1,11 @@
 // Flat Color Shader
 
 #type vertex
+#ifdef GL_ES
+#version 310 es
+#else
 #version 330 core
+#endif
 
 layout(location = 0) in vec3 a_Position;
 
@@ -14,7 +18,11 @@ void main()
 }
 
 #type fragment
+#ifdef GL_ES
+#version 310 es
+#else
 #version 330 core
+#endif
 
 layout(location = 0) out vec4 color;
 

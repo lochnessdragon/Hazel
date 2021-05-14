@@ -1,10 +1,15 @@
 #include "hzpch.h"
 #include "Platform/OpenGL/OpenGLRendererAPI.h"
 
+#ifndef HZ_PLATFORM_WEB
 #include <glad/glad.h>
+#else 
+#include <GLES3/gl3.h>
+#endif
 
 namespace Hazel {
 	
+#ifdef HZ_DEBUG && !defined HZ_PLATFORM_WEB
 	void OpenGLMessageCallback(
 		unsigned source,
 		unsigned type,
@@ -24,12 +29,13 @@ namespace Hazel {
 		
 		HZ_CORE_ASSERT(false, "Unknown severity level!");
 	}
+#endif
 
 	void OpenGLRendererAPI::Init()
 	{
 		HZ_PROFILE_FUNCTION();
 
-	#ifdef HZ_DEBUG
+	#if defined(HZ_DEBUG) && !defined(HZ_PLATFORM_WEB)
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(OpenGLMessageCallback, nullptr);

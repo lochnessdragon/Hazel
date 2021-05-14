@@ -9,7 +9,11 @@
 
 // TEMPORARY
 #include <GLFW/glfw3.h>
+#ifndef HZ_PLATFORM_WEB
 #include <glad/glad.h>
+#else 
+#include <GLES3/gl3.h>
+#endif
 
 #include "ImGuizmo.h"
 
@@ -31,7 +35,9 @@ namespace Hazel {
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+#ifndef HZ_PLATFORM_WEB
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+#endif
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
@@ -57,7 +63,11 @@ namespace Hazel {
 
 		// Setup Platform/Renderer bindings
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
+#ifndef HZ_PLATFORM_WEB
 		ImGui_ImplOpenGL3_Init("#version 410");
+#else
+		ImGui_ImplOpenGL3_Init("#version 300 es");
+#endif
 	}
 
 	void ImGuiLayer::OnDetach()

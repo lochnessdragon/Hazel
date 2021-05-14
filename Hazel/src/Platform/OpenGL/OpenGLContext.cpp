@@ -2,7 +2,11 @@
 #include "Platform/OpenGL/OpenGLContext.h"
 
 #include <GLFW/glfw3.h>
+#ifndef HZ_PLATFORM_WEB
 #include <glad/glad.h>
+#else 
+#include <GLES3/gl3.h>
+#endif
 
 namespace Hazel {
 
@@ -17,8 +21,10 @@ namespace Hazel {
 		HZ_PROFILE_FUNCTION();
 
 		glfwMakeContextCurrent(m_WindowHandle);
+#ifndef HZ_PLATFORM_WEB
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		HZ_CORE_ASSERT(status, "Failed to initialize Glad!");
+#endif
 
 		HZ_CORE_INFO("OpenGL Info:");
 		HZ_CORE_INFO("  Vendor: {0}", glGetString(GL_VENDOR));

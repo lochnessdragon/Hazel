@@ -1,7 +1,10 @@
 // Basic Texture Shader
 
 #type vertex
-#version 450
+#version 300 es
+//#version 450
+
+precision highp float;
 
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
@@ -9,12 +12,12 @@ layout(location = 2) in vec2 a_TexCoord;
 layout(location = 3) in float a_TexIndex;
 layout(location = 4) in float a_TilingFactor;
 
-uniform mat4 u_ViewProjection;
-
 out vec4 v_Color;
 out vec2 v_TexCoord;
-out flat float v_TexIndex;
 out float v_TilingFactor;
+flat out float v_TexIndex;
+
+uniform mat4 u_ViewProjection;
 
 void main()
 {
@@ -26,16 +29,23 @@ void main()
 }
 
 #type fragment
-#version 450
+#version 300 es
+//#version 450
+
+precision highp float;
 
 layout(location = 0) out vec4 color;
 
 in vec4 v_Color;
 in vec2 v_TexCoord;
-in flat float v_TexIndex;
 in float v_TilingFactor;
+flat in float v_TexIndex;
 
+#ifndef GL_ES
 uniform sampler2D u_Textures[32];
+#else
+uniform sampler2D u_Textures[16];
+#endif
 
 void main()
 {
@@ -58,6 +68,7 @@ void main()
 		case 13: texColor *= texture(u_Textures[13], v_TexCoord * v_TilingFactor); break;
 		case 14: texColor *= texture(u_Textures[14], v_TexCoord * v_TilingFactor); break;
 		case 15: texColor *= texture(u_Textures[15], v_TexCoord * v_TilingFactor); break;
+		#ifndef GL_ES
 		case 16: texColor *= texture(u_Textures[16], v_TexCoord * v_TilingFactor); break;
 		case 17: texColor *= texture(u_Textures[17], v_TexCoord * v_TilingFactor); break;
 		case 18: texColor *= texture(u_Textures[18], v_TexCoord * v_TilingFactor); break;
@@ -74,6 +85,7 @@ void main()
 		case 29: texColor *= texture(u_Textures[29], v_TexCoord * v_TilingFactor); break;
 		case 30: texColor *= texture(u_Textures[30], v_TexCoord * v_TilingFactor); break;
 		case 31: texColor *= texture(u_Textures[31], v_TexCoord * v_TilingFactor); break;
+		#endif
 	}
 	color = texColor;
 }

@@ -49,7 +49,11 @@ ExampleLayer::ExampleLayer()
 	m_SquareVA->SetIndexBuffer(squareIB);
 
 	std::string vertexSrc = R"(
+			#ifdef GL_ES
+			#version 310 es
+			#else
 			#version 330 core
+			#endif
 			
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
@@ -69,7 +73,11 @@ ExampleLayer::ExampleLayer()
 		)";
 
 	std::string fragmentSrc = R"(
+			#ifdef GL_ES
+			#version 310 es
+			#else
 			#version 330 core
+			#endif
 			
 			layout(location = 0) out vec4 color;
 
@@ -86,7 +94,11 @@ ExampleLayer::ExampleLayer()
 	m_Shader = Hazel::Shader::Create("VertexPosColor", vertexSrc, fragmentSrc);
 
 	std::string flatColorShaderVertexSrc = R"(
+			#ifdef GL_ES
+			#version 310 es
+			#else
 			#version 330 core
+			#endif
 			
 			layout(location = 0) in vec3 a_Position;
 
@@ -103,7 +115,11 @@ ExampleLayer::ExampleLayer()
 		)";
 
 	std::string flatColorShaderFragmentSrc = R"(
+			#ifdef GL_ES
+			#version 310 es
+			#else
 			#version 330 core
+			#endif
 			
 			layout(location = 0) out vec4 color;
 

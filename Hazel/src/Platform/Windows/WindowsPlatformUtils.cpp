@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "Hazel/Utils/PlatformUtils.h"
 
+#ifndef HZ_PLATFORM_WEB
 #include <commdlg.h>
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -56,3 +57,17 @@ namespace Hazel {
 	}
 
 }
+#else 
+#include "Hazel/Core/Application.h"
+
+namespace Hazel {
+	std::optional<std::string> FileDialogs::OpenFile(const char* filter)
+	{
+	}
+
+	std::optional<std::string> FileDialogs::SaveFile(const char* filter)
+	{
+	}
+
+}
+#endif

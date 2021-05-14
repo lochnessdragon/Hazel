@@ -34,6 +34,8 @@
 #elif defined(__linux__)
 	#define HZ_PLATFORM_LINUX
 	#error "Linux is not supported!"
+#elif defined(__EMSCRIPTEN__)
+	#define HZ_PLATFORM_WEB
 #else
 	/* Unknown compiler/platform */
 	#error "Unknown platform!"

@@ -218,8 +218,11 @@ namespace Hazel {
 				if (cameraComponent)
 				{
 					auto& cc = deserializedEntity.AddComponent<CameraComponent>();
-
+					#ifndef HZ_PLATFORM_WEB
 					auto& cameraProps = cameraComponent["Camera"];
+					#else	
+					auto cameraProps = cameraComponent["Camera"];
+					#endif
 					cc.Camera.SetProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
 
 					cc.Camera.SetPerspectiveVerticalFOV(cameraProps["PerspectiveFOV"].as<float>());

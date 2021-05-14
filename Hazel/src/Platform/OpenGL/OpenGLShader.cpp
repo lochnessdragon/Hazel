@@ -2,7 +2,11 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 
 #include <fstream>
+#ifndef HZ_PLATFORM_WEB
 #include <glad/glad.h>
+#else 
+#include <GLES3/gl3.h>
+#endif
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -141,7 +145,7 @@ namespace Hazel {
 
 				glDeleteShader(shader);
 
-				HZ_CORE_ERROR("{0}", infoLog.data());
+				HZ_CORE_ERROR("{0} when compiling: {1}", infoLog.data(), source);
 				HZ_CORE_ASSERT(false, "Shader compilation failure!");
 				break;
 			}
