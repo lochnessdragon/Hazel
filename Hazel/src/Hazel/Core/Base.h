@@ -48,7 +48,4 @@ namespace Hazel {
 #include "Hazel/Core/Log.h"
 #include "Hazel/Core/Assert.h"
 
-#ifdef HZ_PLATFORM_WEB
-#include <emscripten/emscripten.h>
-#define GLFW_INCLUDE_ES3
-#endif
+

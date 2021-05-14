@@ -3,8 +3,12 @@
 
 #ifndef HZ_PLATFORM_WEB
 #include <glad/glad.h>
+#define HZ_MULTISAMPLE_IMAGE(type, samples, internalFormat, width, height, boolean) glTexImage2DMultisample(type, samples, internalFormat, width, height, boolean)
+#define HZ_CREATE_FRAMEBUFFER(number, buffers) glCreateFramebuffers(number, buffers)
 #else 
 #include <GLES3/gl31.h>
+#define HZ_MULTISAMPLE_IMAGE(type, samples, internalFormat, width, height, boolean) glTexStorage2DMultisample(type, samples, internalFormat, width, height, boolean)
+#define HZ_CREATE_FRAMEBUFFER(number, buffers) glGenFramebuffers(number, buffers)
 #endif
 
 namespace Hazel {
@@ -38,11 +42,7 @@ namespace Hazel {
 			bool multisampled = samples > 1;
 			if (multisampled)
 			{
-#ifndef HZ_PLATFORM_WEB
-				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
-#else 
-				glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
-#endif
+				HZ_MULTISAMPLE_IMAGE(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
 			}
 			else
 			{
@@ -63,11 +63,7 @@ namespace Hazel {
 			bool multisampled = samples > 1;
 			if (multisampled)
 			{
-#ifndef HZ_PLATFORM_WEB
-				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
-#else
-				glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
-#endif
+				HZ_MULTISAMPLE_IMAGE(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
 			}
 			else
 			{
@@ -140,11 +136,8 @@ namespace Hazel {
 			m_DepthAttachment = 0;
 		}
 
-#ifndef HZ_PLATFORM_WEB
-		glCreateFramebuffers(1, &m_RendererID);
-#else
-		glGenFramebuffers(1, &m_RendererID);
-#endif
+		HZ_CREATE_FRAMEBUFFER(1, &m_RendererID);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 
 		bool multisample = m_Specification.Samples > 1;

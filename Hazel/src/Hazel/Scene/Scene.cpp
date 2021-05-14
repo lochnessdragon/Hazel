@@ -132,7 +132,7 @@ namespace Hazel {
 	void Scene::OnComponentAdded(Entity entity, T& component)
 	{
 		#ifndef HZ_PLATFORM_WEB
-		static_assert(false);
+		static_assert(false); // for some reason this breaks emscripten. I know its dumb, but it does it. Shhh!
 		#endif
 	}
 

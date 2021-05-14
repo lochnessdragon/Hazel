@@ -7,6 +7,12 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#ifdef HZ_PLATFORM_WEB
+#define HZ_MAX_TEXTURE_SLOTS 16 // web gl nerds
+#else
+#define HZ_MAX_TEXTURE_SLOTS 32
+#endif
+
 namespace Hazel {
 
 	struct QuadVertex
@@ -26,11 +32,8 @@ namespace Hazel {
 		static const uint32_t MaxQuads = 20000;
 		static const uint32_t MaxVertices = MaxQuads * 4;
 		static const uint32_t MaxIndices = MaxQuads * 6;
-#ifndef HZ_PLATFORM_WEB
-		static const uint32_t MaxTextureSlots = 32; // TODO: RenderCaps
-#else
-		static const uint32_t MaxTextureSlots = 16; // WebGL can only do 16 texture slots. rip :(
-#endif
+
+		static const uint32_t MaxTextureSlots = HZ_MAX_TEXTURE_SLOTS; // TODO: RenderCaps
 
 		Ref<VertexArray> QuadVertexArray;
 		Ref<VertexBuffer> QuadVertexBuffer;

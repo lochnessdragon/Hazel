@@ -3,8 +3,10 @@
 
 #ifndef HZ_PLATFORM_WEB
 #include <glad/glad.h>
+#define HZ_CREATE_VERTEX_ARRAYS(number, arrays) glCreateVertexArrays(1, &m_RendererID)
 #else 
 #include <GLES3/gl3.h>
+#define HZ_CREATE_VERTEX_ARRAYS(number, arrays) glGenVertexArrays(1, &m_RendererID)
 #endif
 
 namespace Hazel {
@@ -33,11 +35,7 @@ namespace Hazel {
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
 		HZ_PROFILE_FUNCTION();
-#ifndef HZ_PLATFORM_WEB
-		glCreateVertexArrays(1, &m_RendererID);
-#else 
-		glGenVertexArrays(1, &m_RendererID);
-#endif
+		HZ_CREATE_VERTEX_ARRAYS(1, &m_RendererID);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()

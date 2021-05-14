@@ -3,6 +3,12 @@
 
 #include <stb_image.h>
 
+#ifdef HZ_PLATFORM_WINDOWS
+#define HZ_CREATE_TEXTURE(type, number, textures) glCreateTextures(type, number, textures)
+#else 
+#define HZ_CREATE_TEXTURE(type, number, textures) glGenTextures(number, textures);glBindTexture(type, *textures)
+#endif
+
 namespace Hazel {
 
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
@@ -13,12 +19,7 @@ namespace Hazel {
 		m_InternalFormat = GL_RGBA8;
 		m_DataFormat = GL_RGBA;
 
-#ifndef HZ_PLATFORM_WEB
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-#else
-		glGenTextures(1, &m_RendererID);
-		glBindTexture(GL_TEXTURE_2D, m_RendererID);
-#endif
+		HZ_CREATE_TEXTURE(GL_TEXTURE_2D, 1, &m_RendererID);
 
 #ifndef HZ_PLATFORM_WEB
 		glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
@@ -73,9 +74,9 @@ namespace Hazel {
 
 		HZ_CORE_ASSERT(internalFormat & dataFormat, "Format not supported!");
 
-#ifndef HZ_PLATFORM_WEB
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+		HZ_CREATE_TEXTURE(GL_TEXTURE_2D, 1, &m_RendererID);
 
+#ifndef HZ_PLATFORM_WEB
 		glTextureStorage2D(m_RendererID, 1, internalFormat, m_Width, m_Height);
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -86,7 +87,6 @@ namespace Hazel {
 
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, dataFormat, GL_UNSIGNED_BYTE, data);
 #else
-		glGenTextures(1, &m_RendererID);
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
 
 		glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, m_Width, m_Height);

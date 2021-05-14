@@ -147,7 +147,7 @@ namespace Hazel {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 #ifdef HZ_PLATFORM_WEB
-			xOffset = xOffset > 0 ? 1 : xOffset < 0 ? -1 : 0; // normalize offsets
+			xOffset = xOffset > 0 ? 1 : xOffset < 0 ? -1 : 0; // normalize offsets (web is weird, yo)
 			yOffset = yOffset > 0 ? 1 : yOffset < 0 ? -1 : 0;
 #endif
 

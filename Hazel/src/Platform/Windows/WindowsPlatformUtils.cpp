@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "Hazel/Utils/PlatformUtils.h"
 
+// because ain't no way this is compiling for web, might as well trash it!
 #ifndef HZ_PLATFORM_WEB
 #include <commdlg.h>
 #include <GLFW/glfw3.h>
@@ -59,14 +60,16 @@ namespace Hazel {
 }
 #else 
 #include "Hazel/Core/Application.h"
-
+// no plan to use filedialogs on web, so we just ignore it (nullopt to remove warnings)
 namespace Hazel {
 	std::optional<std::string> FileDialogs::OpenFile(const char* filter)
 	{
+		return std::nullopt;
 	}
 
 	std::optional<std::string> FileDialogs::SaveFile(const char* filter)
 	{
+		return std::nullopt;
 	}
 
 }

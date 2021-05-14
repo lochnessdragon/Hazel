@@ -3,9 +3,12 @@
 
 #ifndef HZ_PLATFORM_WEB
 #include <glad/glad.h>
+#define HZ_CREATE_BUFFERS(number, buffers) glCreateBuffers(number, buffers)
 #else 
 #include <GLES3/gl3.h>
+#define HZ_CREATE_BUFFERS(number, buffers) glGenBuffers(number, buffers)
 #endif
+
 
 namespace Hazel {
 
@@ -17,11 +20,8 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		#ifndef HZ_PLATFORM_WEB
-		glCreateBuffers(1, &m_RendererID);
-		#else 
-		glGenBuffers(1, &m_RendererID);
-		#endif
+		HZ_CREATE_BUFFERS(1, &m_RendererID);
+		
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 	}
@@ -30,11 +30,8 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		#ifndef HZ_PLATFORM_WEB
-		glCreateBuffers(1, &m_RendererID);
-		#else 
-		glGenBuffers(1, &m_RendererID);
-		#endif
+		HZ_CREATE_BUFFERS(1, &m_RendererID);
+
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 	}
@@ -75,18 +72,16 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		#ifndef HZ_PLATFORM_WEB
-		glCreateBuffers(1, &m_RendererID);
-		#else 
-		glGenBuffers(1, &m_RendererID);
-		#endif
+		HZ_CREATE_BUFFERS(1, &m_RendererID);
 		
 		// GL_ELEMENT_ARRAY_BUFFER is not valid without an actively bound VAO
 		// Binding with GL_ARRAY_BUFFER allows the data to be loaded regardless of VAO state. 
+		// I'll trust you on this one, Cherno. -- lochnessdragon
 #ifndef HZ_PLATFORM_WEB
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 #else
+		// OpenGL es, however, will complain if the buffer is bound as an array and then an element buffer.
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 #endif

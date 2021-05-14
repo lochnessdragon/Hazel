@@ -221,7 +221,7 @@ namespace Hazel {
 					#ifndef HZ_PLATFORM_WEB
 					auto& cameraProps = cameraComponent["Camera"];
 					#else	
-					auto cameraProps = cameraComponent["Camera"];
+					auto cameraProps = cameraComponent["Camera"]; // changes types for emscripten. idk why
 					#endif
 					cc.Camera.SetProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
 
